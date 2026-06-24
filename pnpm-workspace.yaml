@@ -1,0 +1,4 @@
+shellEmulator: true
+
+allowBuilds:
+  electron-winstaller: true
