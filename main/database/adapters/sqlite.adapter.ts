@@ -1,12 +1,12 @@
 import type { IDatabaseAdapter } from '@main/database/adapters/database.adapter'
-import type { ISQLiteConnectionConfig } from '@shared/types/connection.type'
+import type { ISQLiteConfig } from '@main/database/database.type'
 import type { Database as SQLiteDatabase } from 'better-sqlite3'
-import { ConnectionMapper } from '@main/database/connection.mapper'
+import { DatabaseMapper } from '@main/database/database.mapper'
 
 export class SQLiteAdapter implements IDatabaseAdapter {
   private _database: SQLiteDatabase | null = null
 
-  constructor(private readonly config: ISQLiteConnectionConfig) {}
+  constructor(private readonly config: ISQLiteConfig) {}
 
   async connect(): Promise<void> {
     if (this._database) {
@@ -14,7 +14,7 @@ export class SQLiteAdapter implements IDatabaseAdapter {
     }
 
     try {
-      this._database = ConnectionMapper.toClient(this.config) as SQLiteDatabase
+      this._database = DatabaseMapper.toClient(this.config) as SQLiteDatabase
     }
     catch (err: unknown) {
       this._database = null
@@ -26,6 +26,7 @@ export class SQLiteAdapter implements IDatabaseAdapter {
   async disconnect(): Promise<void> {
     if (this._database) {
       this._database.close()
+
       this._database = null
     }
   }
@@ -34,9 +35,10 @@ export class SQLiteAdapter implements IDatabaseAdapter {
     let database: SQLiteDatabase | null = null
 
     try {
-      database = ConnectionMapper.toClient(this.config) as SQLiteDatabase
+      database = DatabaseMapper.toClient(this.config) as SQLiteDatabase
 
       database.prepare('SELECT 1').run()
+
       return true
     }
     catch {

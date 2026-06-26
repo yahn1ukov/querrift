@@ -1,12 +1,12 @@
-import type { ConnectionConfig } from '@shared/types/connection.type'
+import type { DatabaseConfig } from '@main/database/database.type'
 import { DB_TYPE } from '@shared/constants/db.constant'
 import SQLite from 'better-sqlite3'
 import { Client as PostgresClient } from 'pg'
 
 type Client = PostgresClient | SQLite.Database
 
-export class ConnectionMapper {
-  static toClient(config: ConnectionConfig): Client {
+export class DatabaseMapper {
+  static toClient(config: DatabaseConfig): Client {
     switch (config.type) {
       case DB_TYPE.POSTGRES:
         return new PostgresClient({

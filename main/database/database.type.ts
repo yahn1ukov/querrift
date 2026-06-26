@@ -1,6 +1,6 @@
 import type { DB_TYPE } from '@shared/constants/db.constant'
 
-export interface IPostgresConnectionConfig {
+export interface IPostgresConfig {
   type: typeof DB_TYPE.POSTGRES
   host: string
   port: number
@@ -9,9 +9,9 @@ export interface IPostgresConnectionConfig {
   database: string
 }
 
-export interface ISQLiteConnectionConfig {
+export interface ISQLiteConfig {
   type: typeof DB_TYPE.SQLITE
   path: string
 }
 
-export type ConnectionConfig = IPostgresConnectionConfig | ISQLiteConnectionConfig
+export type DatabaseConfig = IPostgresConfig | ISQLiteConfig

@@ -1,19 +1,19 @@
 import type { IDatabaseAdapter } from '@main/database/adapters/database.adapter'
-import type { IPostgresConnectionConfig } from '@shared/types/connection.type'
+import type { IPostgresConfig } from '@main/database/database.type'
 import type { Client as PostgresClient } from 'pg'
-import { ConnectionMapper } from '@main/database/connection.mapper'
+import { DatabaseMapper } from '@main/database/database.mapper'
 
 export class PostgresAdapter implements IDatabaseAdapter {
   private _client: PostgresClient | null = null
 
-  constructor(private readonly config: IPostgresConnectionConfig) {}
+  constructor(private readonly config: IPostgresConfig) {}
 
   async connect(): Promise<void> {
     if (this._client) {
       await this._client.end()
     }
 
-    this._client = ConnectionMapper.toClient(this.config) as PostgresClient
+    this._client = DatabaseMapper.toClient(this.config) as PostgresClient
 
     try {
       await this._client.connect()
@@ -28,12 +28,13 @@ export class PostgresAdapter implements IDatabaseAdapter {
   async disconnect(): Promise<void> {
     if (this._client) {
       await this._client.end()
+
       this._client = null
     }
   }
 
   async test(): Promise<boolean> {
-    const client = ConnectionMapper.toClient(this.config) as PostgresClient
+    const client = DatabaseMapper.toClient(this.config) as PostgresClient
 
     try {
       await client.connect()

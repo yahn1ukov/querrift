@@ -1,6 +1,6 @@
-import type { ConnectionConfig } from '@shared/types/connection.type'
+import type { DatabaseConfig } from '@main/database/database.type'
 
-export type ConnectionJSON = ConnectionConfig & {
+export type ConnectionJSON = DatabaseConfig & {
   id: string
   name: string
 }
@@ -9,7 +9,7 @@ export class Connection {
   constructor(
     public readonly id: string,
     public readonly name: string,
-    public readonly config: ConnectionConfig,
+    public readonly config: DatabaseConfig,
   ) {}
 
   static fromJSON(json: ConnectionJSON): Connection {
