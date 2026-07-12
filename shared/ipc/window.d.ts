@@ -1,10 +1,29 @@
-import type { ipcRenderer } from 'electron'
+import type { DBConnectionEvent } from '@shared/events/db-connection.event'
+import type { IPCEvent } from '@shared/events/ipc.event'
+import type { IpcRendererEvent } from 'electron'
 
-interface Window {
-  ipcRenderer: {
-    on: typeof ipcRenderer.on
-    off: typeof ipcRenderer.off
-    send: typeof ipcRenderer.send
-    invoke: typeof ipcRenderer.invoke
+declare global {
+  interface Window {
+    ipcRenderer: {
+      on: <TChannel extends keyof DBConnectionEvent>(
+        channel: TChannel,
+        listener: (event: IpcRendererEvent, ...args: Parameters<DBConnectionEvent[TChannel]>) => void,
+      ) => void
+
+      off: <TChannel extends keyof DBConnectionEvent>(
+        channel: TChannel,
+        listener: (event: IpcRendererEvent, ...args: Parameters<DBConnectionEvent[TChannel]>) => void,
+      ) => void
+
+      invoke: <TChannel extends keyof IPCEvent>(
+        channel: TChannel,
+        ...args: Parameters<IPCEvent[TChannel]>
+      ) => ReturnType<IPCEvent[TChannel]>
+    }
+
+    electronAPI: {
+      platform: NodeJS.Platform
+      getPathForFile: typeof import('electron').webUtils.getPathForFile
+    }
   }
 }

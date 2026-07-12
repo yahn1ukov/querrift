@@ -5,6 +5,7 @@ release
 
 .idea
 .vscode
+.tanstack
 .DS_Store
 
 pnpm-debug.log*

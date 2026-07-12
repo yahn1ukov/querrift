@@ -1,48 +1,52 @@
-import type { IConnectionEvent } from '@main/services/events/connection.event'
 import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { DatabaseFactory } from '@main/database/database.factory'
-import { registerConnectionHandlers } from '@main/ipc/connection.handler'
-import { ConnectionRepository } from '@main/repositories/connection.repository'
-import { ConnectionService } from '@main/services/connection.service'
-import { app, BrowserWindow, ipcMain } from 'electron'
-import EventEmitter from 'eventemitter3'
+import { bootstrap } from '@main/bootstrap'
+import { app, BrowserWindow } from 'electron'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-let win: BrowserWindow | null
+let window: BrowserWindow | null = null
 
 function createWindow() {
-  win = new BrowserWindow({
-    width: 800,
+  window = new BrowserWindow({
+    width: 1000,
     height: 600,
+    minWidth: 1000,
+    minHeight: 600,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: process.platform === 'win32' || process.platform === 'linux'
+      ? {
+          color: '#ffffff',
+          symbolColor: '#000000',
+          height: 32,
+        }
+      : false,
     webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
       preload: path.join(__dirname, 'preload.mjs'),
+      sandbox: true,
     },
   })
 
-  const eventBus = new EventEmitter<IConnectionEvent>()
-  const connectionService = new ConnectionService(
-    new ConnectionRepository(),
-    new DatabaseFactory(),
-    eventBus,
-  )
+  if (process.env.NODE_ENV === 'development') {
+    window.webContents.openDevTools()
+  }
 
-  registerConnectionHandlers(ipcMain, win, connectionService, eventBus)
+  bootstrap(window)
 
   if (process.env.VITE_DEV_SERVER_URL) {
-    win.loadURL(process.env.VITE_DEV_SERVER_URL)
+    window.loadURL(process.env.VITE_DEV_SERVER_URL)
   }
   else {
-    win.loadFile(path.join(__dirname, '../dist/index.html'))
+    window.loadFile(path.join(__dirname, '../dist/index.html'))
   }
 }
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
-    win = null
   }
 })
 

@@ -1,4 +1,11 @@
 {
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@renderer/*": ["./renderer/*"]
+    },
+    "ignoreDeprecations": "6.0"
+  },
   "references": [
     { "path": "./tsconfig.main.json" },
     { "path": "./tsconfig.renderer.json" }
