@@ -5,12 +5,13 @@ import type { DBConnectionEvent } from '@shared/events/db-connection.event'
 import type { BrowserWindow, IpcMain } from 'electron'
 import type EventEmitter from 'eventemitter3'
 import { registerIPCHandler } from '@main/utils/ipc-result'
+import { createWindowDispatcher } from '@main/utils/window-dispatcher'
 import { EVENT_BUS } from '@shared/constants/event-bus.constant'
 import { EVENT_IPC } from '@shared/constants/event-ipc.constant'
 
 export function registerDBConnectionHandlers(
   ipc: IpcMain,
-  window: BrowserWindow,
+  getWindow: () => BrowserWindow | null,
   connectionService: DBConnectionService,
   sessionService: DBConnectionSessionService,
   eventBus: EventEmitter<DBConnectionEvent>,
@@ -35,10 +36,12 @@ export function registerDBConnectionHandlers(
   registerIPCHandler(ipc, EVENT_IPC.DB_CONNECTION.IMPORT, (path: string) => connectionService.importFromFile(path))
   registerIPCHandler(ipc, EVENT_IPC.DB_CONNECTION.EXPORT, (path: string) => connectionService.exportToFile(path))
 
-  eventBus.on(EVENT_BUS.DB_CONNECTION.CONNECTED, id => window.webContents.send(EVENT_BUS.DB_CONNECTION.CONNECTED, id))
-  eventBus.on(EVENT_BUS.DB_CONNECTION.DISCONNECTED, () => window.webContents.send(EVENT_BUS.DB_CONNECTION.DISCONNECTED))
-  eventBus.on(EVENT_BUS.DB_CONNECTION.LOST, dto => window.webContents.send(EVENT_BUS.DB_CONNECTION.LOST, dto))
-  eventBus.on(EVENT_BUS.DB_CONNECTION.CREATED, dto => window.webContents.send(EVENT_BUS.DB_CONNECTION.CREATED, dto))
-  eventBus.on(EVENT_BUS.DB_CONNECTION.UPDATED, dto => window.webContents.send(EVENT_BUS.DB_CONNECTION.UPDATED, dto))
-  eventBus.on(EVENT_BUS.DB_CONNECTION.DELETED, id => window.webContents.send(EVENT_BUS.DB_CONNECTION.DELETED, id))
+  const dispatch = createWindowDispatcher(getWindow)
+
+  eventBus.on(EVENT_BUS.DB_CONNECTION.CONNECTED, id => dispatch(EVENT_BUS.DB_CONNECTION.CONNECTED, id))
+  eventBus.on(EVENT_BUS.DB_CONNECTION.DISCONNECTED, () => dispatch(EVENT_BUS.DB_CONNECTION.DISCONNECTED))
+  eventBus.on(EVENT_BUS.DB_CONNECTION.LOST, dto => dispatch(EVENT_BUS.DB_CONNECTION.LOST, dto))
+  eventBus.on(EVENT_BUS.DB_CONNECTION.CREATED, dto => dispatch(EVENT_BUS.DB_CONNECTION.CREATED, dto))
+  eventBus.on(EVENT_BUS.DB_CONNECTION.UPDATED, dto => dispatch(EVENT_BUS.DB_CONNECTION.UPDATED, dto))
+  eventBus.on(EVENT_BUS.DB_CONNECTION.DELETED, id => dispatch(EVENT_BUS.DB_CONNECTION.DELETED, id))
 }

@@ -34,8 +34,6 @@ function createWindow() {
     window.webContents.openDevTools()
   }
 
-  bootstrap(window)
-
   if (process.env.VITE_DEV_SERVER_URL) {
     window.loadURL(process.env.VITE_DEV_SERVER_URL)
   }
@@ -56,4 +54,7 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  bootstrap(() => window)
+  createWindow()
+})

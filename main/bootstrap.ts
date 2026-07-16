@@ -8,7 +8,7 @@ import { DBConnectionService } from '@main/services/db-connection.service'
 import { ipcMain } from 'electron'
 import EventEmitter from 'eventemitter3'
 
-export function bootstrap(window: BrowserWindow) {
+export function bootstrap(getWindow: () => BrowserWindow | null) {
   const dbConnectionEventBus = new EventEmitter<DBConnectionEvent>()
 
   const dbConnectionService = new DBConnectionService(
@@ -23,7 +23,7 @@ export function bootstrap(window: BrowserWindow) {
 
   registerDBConnectionHandlers(
     ipcMain,
-    window,
+    getWindow,
     dbConnectionService,
     dbConnectionSessionService,
     dbConnectionEventBus,
