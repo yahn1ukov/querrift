@@ -1,5 +1,5 @@
 import type { Control, FieldPath, FieldValues } from 'react-hook-form'
-import { FormField } from '@renderer/components/forms/fields/FormField'
+import { FormField } from '@renderer/components/forms/fields/form-field'
 import { Input } from '@renderer/components/ui/input'
 
 interface Props<TFieldValues extends FieldValues> {

@@ -1,5 +1,5 @@
 import type { CreateDBConnectionDTO } from '@shared/dtos/db-connection.dto'
-import { FileField } from '@renderer/components/forms/fields/FileField'
+import { FileField } from '@renderer/components/forms/fields/file-field'
 import { useFormContext } from 'react-hook-form'
 
 export function SQLiteForm() {
@@ -11,7 +11,7 @@ export function SQLiteForm() {
       name="config.path"
       label="File"
       accept=".db,.sqlite,.sqlite3,.db3,.s3db,.sl3,.sdb"
-      onClick={file => window.electronAPI.getPathForFile(file)}
+      onSelect={file => window.electronAPI.getPathForFile(file)}
     />
   )
 }

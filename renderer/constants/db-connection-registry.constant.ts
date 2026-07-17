@@ -1,7 +1,7 @@
 import type { DBConnectionRegistry } from '@renderer/types/db-connection-registry.type'
 import type { DBConnectionType } from '@shared/types/db-connection.type'
-import { PostgresForm } from '@renderer/components/forms/PostgresForm'
-import { SQLiteForm } from '@renderer/components/forms/SQLiteForm'
+import { PostgresForm } from '@renderer/components/forms/postgres-form'
+import { SQLiteForm } from '@renderer/components/forms/sqlite-form'
 import { DB_CONNECTION_TYPES } from '@shared/constants/db-connection-types.constant'
 import { Database, HardDrive } from 'lucide-react'
 

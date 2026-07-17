@@ -9,30 +9,30 @@ export function useDBConnectionEvents() {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    const invalidateConnections = () => {
+    const invalidateAll = () => {
       void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.DB_CONNECTION.ALL })
-      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.DB_CONNECTION.ACTIVE })
     }
 
-    const handleRefresh = () => invalidateConnections()
     const handleLost = (_event: IpcRendererEvent, payload: { message: string }) => {
-      invalidateConnections()
-      toast.error('Connection lost', { description: payload.message })
+      invalidateAll()
+      toast.error('Connection lost', {
+        description: payload.message,
+      })
     }
 
-    window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.CONNECTED, handleRefresh)
-    window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.DISCONNECTED, handleRefresh)
-    window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.CREATED, handleRefresh)
-    window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.UPDATED, handleRefresh)
-    window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.DELETED, handleRefresh)
+    window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.CONNECTED, invalidateAll)
+    window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.DISCONNECTED, invalidateAll)
+    window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.CREATED, invalidateAll)
+    window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.UPDATED, invalidateAll)
+    window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.DELETED, invalidateAll)
     window.ipcRenderer.on(EVENT_BUS.DB_CONNECTION.LOST, handleLost)
 
     return () => {
-      window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.CONNECTED, handleRefresh)
-      window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.DISCONNECTED, handleRefresh)
-      window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.CREATED, handleRefresh)
-      window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.UPDATED, handleRefresh)
-      window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.DELETED, handleRefresh)
+      window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.CONNECTED, invalidateAll)
+      window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.DISCONNECTED, invalidateAll)
+      window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.CREATED, invalidateAll)
+      window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.UPDATED, invalidateAll)
+      window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.DELETED, invalidateAll)
       window.ipcRenderer.off(EVENT_BUS.DB_CONNECTION.LOST, handleLost)
     }
   }, [queryClient])

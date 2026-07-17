@@ -1,5 +1,5 @@
 import type { CreateDBConnectionDTO } from '@shared/dtos/db-connection.dto'
-import { TextField } from '@renderer/components/forms/fields/TextField'
+import { TextField } from '@renderer/components/forms/fields/text-field'
 import { FieldGroup } from '@renderer/components/ui/field'
 import { useFormContext } from 'react-hook-form'
 

@@ -30,6 +30,10 @@ function createWindow() {
     },
   })
 
+  window.on('closed', () => {
+    window = null
+  })
+
   if (process.env.NODE_ENV === 'development') {
     window.webContents.openDevTools()
   }

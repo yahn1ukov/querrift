@@ -1,5 +1,5 @@
 import type { Control, FieldPath, FieldValues } from 'react-hook-form'
-import { FormField } from '@renderer/components/forms/fields/FormField'
+import { FormField } from '@renderer/components/forms/fields/form-field'
 import { Input } from '@renderer/components/ui/input'
 
 interface State<TFieldValues extends FieldValues> {
@@ -11,7 +11,7 @@ interface State<TFieldValues extends FieldValues> {
 }
 
 interface Actions {
-  onClick: (file: File) => string
+  onSelect: (file: File) => string
 }
 
 type Props<TFieldValues extends FieldValues> = State<TFieldValues> & Actions
@@ -22,7 +22,7 @@ export function FileField<TFieldValues extends FieldValues>({
   label,
   accept,
   description,
-  onClick,
+  onSelect,
 }: Props<TFieldValues>) {
   return (
     <FormField control={control} name={name} label={label} description={description}>
@@ -38,7 +38,7 @@ export function FileField<TFieldValues extends FieldValues>({
           onChange={(e) => {
             const file = e.target.files?.[0]
             if (file) {
-              field.onChange(onClick(file))
+              field.onChange(onSelect(file))
             }
           }}
         />

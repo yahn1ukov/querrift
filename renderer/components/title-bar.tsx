@@ -21,20 +21,31 @@ export function TitleBar() {
       <nav
         className={cn('z-10', isMacOS && 'ml-18')}
         style={{ WebkitAppRegion: 'no-drag' } as CSSProperties}
-        aria-label="History"
       >
         <ButtonGroup>
-          <Button variant="ghost" size="icon-xs" disabled={!canGoBack} aria-label="Go back" onClick={() => router.history.back()}>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => router.history.back()}
+            disabled={!canGoBack}
+          >
             <ChevronLeft className="size-4" />
           </Button>
 
-          <Button variant="ghost" size="icon-xs" disabled={!canGoForward} aria-label="Go forward" onClick={() => router.history.forward()}>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => router.history.forward()}
+            disabled={!canGoForward}
+          >
             <ChevronRight className="size-4" />
           </Button>
         </ButtonGroup>
       </nav>
 
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <div className="pointer-events-none absolute inset-x-0 mx-auto flex items-center justify-center">
         <span className="text-sm font-semibold text-foreground">Querrift</span>
       </div>
     </header>
